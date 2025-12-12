@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Asset;
+use App\Models\Order;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,5 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        Asset::factory(10)->create();
+        Order::factory(10)->create();
     }
 }

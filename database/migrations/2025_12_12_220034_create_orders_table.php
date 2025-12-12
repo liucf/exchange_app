@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assets', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('symbol'); // BTC, ETH
-            $table->decimal('amount', 20, 8)->default(0);
-            $table->decimal('locked_amount', 20, 8)->default(0);
+            $table->enum('side', ['buy', 'sell']);
+            $table->decimal('price', 20, 2);
+            $table->decimal('amount', 20, 8); // amount of asset
+            $table->tinyInteger('status')->default(1); // open=1, filled=2, cancelled=3
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assets');
+        Schema::dropIfExists('orders');
     }
 };
