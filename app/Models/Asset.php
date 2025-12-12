@@ -10,6 +10,14 @@ class Asset extends Model
 {
     use HasFactory;
 
+    protected function casts(): array
+    {
+        return [
+            'amount' => 'decimal:8',
+            'locked_amount' => 'decimal:8',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
