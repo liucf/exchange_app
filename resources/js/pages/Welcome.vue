@@ -52,13 +52,18 @@ withDefaults(
             class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0"
         >
             <main
-                class="flex w-full max-w-[335px] flex-col-reverse overflow-hidden rounded-lg lg:max-w-4xl gap-6 items-center"
+                class="flex w-full max-w-[335px] flex-col-reverse items-center gap-6 overflow-hidden rounded-lg lg:max-w-4xl"
             >
                 <p>
-                    Assessment project for Virgosoft. Built with Laravel and Vue 3 by Michael Liu.
+                    Assessment project for Virgosoft. Built with Laravel and Vue
+                    3 by Michael Liu.
                 </p>
                 <div>
-                  <img src="/images/logo.png" alt="logo" class="w-1/3 m-auto" />
+                    <img
+                        src="/images/logo.png"
+                        alt="logo"
+                        class="m-auto w-1/3"
+                    />
                 </div>
             </main>
         </div>
