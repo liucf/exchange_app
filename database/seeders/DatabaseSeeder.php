@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Asset;
-use App\Models\Order;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,12 +15,21 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $sellUser = User::factory()->create([
+            'name' => 'Sell User',
+            'email' => 'sell@example.com',
+            'balance' => 0,
+        ]);
+        $sellUser->assets()->create([
+            'symbol' => 'BTC',
+            'amount' => 5,
+            'locked_amount' => 0,
         ]);
 
-        Asset::factory(10)->create();
-        Order::factory(10)->create();
+        User::factory()->create([
+            'name' => 'Buy User',
+            'email' => 'buy@example.com',
+            'balance' => 100000,
+        ]);
     }
 }

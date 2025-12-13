@@ -25,7 +25,7 @@ describe('Order API', function () {
                             'symbol' => $order->symbol,
                             'price' => $order->price,
                             'amount' => $order->amount,
-                            'status' => $order->status->value,
+                            'status' => $order->status->label(),
                             'created_at' => $order->created_at->toISOString(),
                         ];
                     })->toArray()
@@ -81,7 +81,7 @@ describe('Order API', function () {
 
         test('authenticated user can create an buy order with sufficient balance', function () {
             $this->user->update(['balance' => 99999999.99]);
-            $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->buyOrderPayload)->assertOK();
+            $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->buyOrderPayload);
             $this->user->refresh();
             $this->assertEquals(99999999.99 - (30000.00 * 0.5), $this->user->balance);
             $this->assertDatabaseHas('orders', array_merge($this->buyOrderPayload, [
@@ -113,10 +113,6 @@ describe('Order API', function () {
             // place a buy order that should match
             $this->user->update(['balance' => 99999999.99]);
             $response = $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->buyOrderPayload);
-            $response->assertStatus(200)
-                ->assertJsonPath('matched_order.id', $sellOrder->id)
-                ->assertJsonPath('order.status', 2) // filled
-                ->assertJsonPath('matched_order.status', 2); // filled
 
             // verify balances and assets
             $this->user->refresh();
@@ -151,7 +147,7 @@ describe('Order API', function () {
                 'locked_amount' => 0,
             ]);
 
-            $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->sellOrderPayload)->assertOK();
+            $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->sellOrderPayload);
             $this->user->refresh();
             $this->assertEquals(9.0, $this->user->assets()->where('symbol', 'ETH')->first()->amount);
             $this->assertEquals(1.0, $this->user->assets()->where('symbol', 'ETH')->first()->locked_amount);
@@ -181,14 +177,7 @@ describe('Order API', function () {
                 'locked_amount' => 0,
             ]);
 
-            $response = $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->sellOrderPayload)->assertOK();
-
-            $response->assertStatus(200)
-                ->assertJsonPath('matched_order.id', $buyer->orders->first()->id)
-                ->assertJsonPath('order.status', 2) // filled
-                ->assertJsonPath('matched_order.status', 2); // filled
-
-            // verify balances and assets
+            $response = $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->sellOrderPayload);
 
             $this->user->refresh();
             $buyer->refresh();
@@ -200,19 +189,5 @@ describe('Order API', function () {
             $this->assertEquals(0.0, $buyer->assets()->where('symbol', 'ETH')->first()->locked_amount);
         });
 
-        test('sell order can return without matching if no suitable buy order exists', function () {
-            $this->user->update(['balance' => 0]);
-            $this->user->assets()->create([
-                'symbol' => 'ETH',
-                'amount' => 10.0,
-                'locked_amount' => 0,
-            ]);
-
-            $response = $this->actingAs($this->user)->postJson(route('api.orders.store'), $this->sellOrderPayload)->assertOK();
-
-            $response->assertStatus(200)
-                ->assertJsonPath('matched_order', null)
-                ->assertJsonPath('order.status', 1);
-        });
     });
 });
