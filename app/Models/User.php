@@ -61,4 +61,48 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function hasSufficientBalance(float $amount): bool
+    {
+        return $this->balance >= $amount;
+    }
+
+    public function doseNotHaveSufficientBalance(float $amount): bool
+    {
+        return ! $this->hasSufficientBalance($amount);
+    }
+
+    public function hasSufficientAsset(string $symbol, float $amount): bool
+    {
+        $asset = $this->assets()->where('symbol', $symbol)->first();
+
+        if (! $asset) {
+            return false;
+        }
+
+        return $asset->amount >= $amount;
+    }
+
+    public function doseNotHaveSufficientAsset(string $symbol, float $amount): bool
+    {
+        return ! $this->hasSufficientAsset($symbol, $amount);
+    }
+
+    public function incrementAsset(string $symbol, float $amount): void
+    {
+        $asset = $this->assets()->firstOrCreate(
+            ['symbol' => $symbol],
+            ['amount' => 0, 'locked_amount' => 0]
+        );
+
+        $asset->increment('amount', $amount);
+    }
+
+    public function decrementAsset(string $symbol, float $amount): void
+    {
+        $asset = $this->assets()->where('symbol', $symbol)->firstOrFail();
+
+        $asset->decrement('amount', $amount);
+        $asset->increment('locked_amount', $amount);
+    }
 }
