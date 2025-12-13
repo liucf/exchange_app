@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
         return $request->user()->orders()
             ->where('status', OrderStatus::OPEN)
-            ->when($request->has('symbol'), fn($query) => $query->where('symbol', $request->query('symbol')))
+            ->when($request->has('symbol'), fn ($query) => $query->where('symbol', $request->query('symbol')))
             ->get()
             ->toResourceCollection();
     }

@@ -3,19 +3,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { cancel, store } from '@/routes/api/orders';
-import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link, router } from '@inertiajs/vue3';
 import { useEcho } from '@laravel/echo-vue';
-import { toast } from 'vue-sonner'
+import { toast } from 'vue-sonner';
 
 const { user } = defineProps({
     user: Object,
 });
 console.log('Dashboard user prop:', user);
-useEcho(`user.${user.id}`, 'OrderMatched', (e) => {
+useEcho(`user.${user.id}`, 'OrderMatched', () => {
     toast.success('Congratulations! Your order has been matched successfully.');
     router.reload();
 });
-
 </script>
 
 <template>
