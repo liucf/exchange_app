@@ -1,29 +1,27 @@
-<script setup lang="ts">
+<script setup>
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
 import { cancel, store } from '@/routes/api/orders';
-import { type BreadcrumbItem } from '@/types';
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
+import { useEcho } from '@laravel/echo-vue';
+import { toast } from 'vue-sonner'
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-];
+const { user } = defineProps({
+    user: Object,
+});
+console.log('Dashboard user prop:', user);
+useEcho(`user.${user.id}`, 'OrderMatched', (e) => {
+    toast.success('Congratulations! Your order has been matched successfully.');
+    router.reload();
+});
 
-const { user } = defineProps<{
-    user: object;
-}>();
-console.log(user);
 </script>
 
 <template>
     <Head title="Dashboard" />
 
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout>
         <div
             class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
         >

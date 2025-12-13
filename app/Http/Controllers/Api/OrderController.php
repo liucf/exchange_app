@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderMatched;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\OrderStatus;
@@ -15,7 +16,7 @@ class OrderController extends Controller
     {
         return $request->user()->orders()
             ->where('status', OrderStatus::OPEN)
-            ->when($request->has('symbol'), fn ($query) => $query->where('symbol', $request->query('symbol')))
+            ->when($request->has('symbol'), fn($query) => $query->where('symbol', $request->query('symbol')))
             ->get()
             ->toResourceCollection();
     }
@@ -73,6 +74,8 @@ class OrderController extends Controller
                     // commission fee deducted from buyer *0.015
                     $commission = ($order->price * $order->amount) * 0.015;
                     $user->decrement('balance', $commission);
+                    // dispatch event
+                    OrderMatched::dispatch($order, $matchingSellOrder);
                 }
             } else {
                 $user->decrementAsset($data['symbol'], $data['amount']);
@@ -100,6 +103,8 @@ class OrderController extends Controller
                     // commission fee deducted from buyer *0.015
                     $commission = ($matchingBuyOrder->price * $matchingBuyOrder->amount) * 0.015;
                     $buyer->decrement('balance', $commission);
+                    // dispatch event
+                    OrderMatched::dispatch($order, $matchingBuyOrder);
                 }
             }
         });
