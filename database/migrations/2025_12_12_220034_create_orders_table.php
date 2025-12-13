@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('symbol'); // BTC, ETH
             $table->enum('side', ['buy', 'sell']);
             $table->decimal('price', 20, 2);
             $table->decimal('amount', 20, 8); // amount of asset

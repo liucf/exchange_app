@@ -19,6 +19,7 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'symbol' => fake()->randomElement(['BTC', 'ETH', 'LTC', 'XRP']),
             'side' => fake()->randomElement(['buy', 'sell']),
             'price' => fake()->randomFloat(2, 1000, 50000),
             'amount' => fake()->randomFloat(8, 0.01, 5),
