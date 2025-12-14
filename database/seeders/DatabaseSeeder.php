@@ -25,6 +25,11 @@ class DatabaseSeeder extends Seeder
             'amount' => 5,
             'locked_amount' => 0,
         ]);
+        $sellUser->assets()->create([
+            'symbol' => 'ETH',
+            'amount' => 20,
+            'locked_amount' => 0,
+        ]);
 
         User::factory()->create([
             'name' => 'Buy User',
