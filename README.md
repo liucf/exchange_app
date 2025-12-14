@@ -64,6 +64,9 @@ Open two different browser(for example: chrome and firefox)
 
 - Browser 1: Access `http://localhost:8888`, login with `sell@example.com` and password `password`
 - Browser 2: Access `http://localhost:8888`, login with `buy@example.com` and password `password`
+<p align="center">
+  <img src="public/images/screenshot.gif" />
+</p>
 
 ### 12. Running Tests
 
