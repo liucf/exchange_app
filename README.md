@@ -19,9 +19,19 @@ cd exchange_app
 cp .env.example .env
 ```
 
-### 4. Set Up the Environment Variables
+### 4. Install Dependencies and start queue worker
 
-- Run `php artisan key:generate` to generate the application key.
+```bash
+composer install
+```
+
+### 5. Start the Application Using Sail
+```bash
+sail up -d
+```
+
+### 6. Set Up the Environment Variables
+- Run `sail artisan key:generate` to generate the application key.
 - Create a pusher project and set the following variables in your `.env` file:
     ```
     PUSHER_APP_ID=your_app_id
@@ -29,34 +39,33 @@ cp .env.example .env
     PUSHER_APP_SECRET=your_app_secret
     PUSHER_APP_CLUSTER=your_app_cluster
     ```
-
-### 5. Start the Application Using Sail
-
+### 7. build front-end assets and start queue worker
 ```bash
-sail up -d
-```
-
-### 6. Install Dependencies and start queue worker
-
-```bash
-sail composer install
 sail npm install
 sail npm run build
+```
+
+### 8. Run Migrations and Seed the Database
+```bash
+sail artisan migrate --seed
+```
+
+### 9. Start the Queue Worker
+```bash
 sail artisan queue:work
 ```
 
-### 7. Access the Application
+### 10. Access the Application
 
 Open your web browser and navigate to `http://localhost:8888` to access the application.
 
-### 8. Test functionality
-
+### 11. Test functionality
 Open two different browser(for example: chrome and firefox)
 
 - Browser 1: Access `http://localhost:8888`, login with `sell@example.com` and password `password`
 - Browser 2: Access `http://localhost:8888`, login with `buy@example.com` and password `password`
 
-### 8. Running Tests
+### 12. Running Tests
 
 To run the test suite, use the following command:
 
